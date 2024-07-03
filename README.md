@@ -32,7 +32,7 @@ The code snippet demonstrates how to use the `Leonardo` class from the `leonardo
     )
     ```
 
-    > **Note**: Replace `model_identifier` and `model_version` with the specific model ID and version you wish to use. For a list of available models and their versions, see [models.md](models.md). Please note that you can run `gen_models_md.py` to update the documentation with the latest model information.
+    > **Note**: Replace `model_identifier` and `model_version` with the specific model ID and version you wish to use. For a list of available models and their versions, see [models.md](https://github.com/theunkowndude/leonardoWrapper/edit/main/models.md). Please note that you can run `gen_models_md.py` to update the documentation with the latest model information.
     
 
 3. **Waiting for Image Generation**: The script waits for the image generation process to complete.
