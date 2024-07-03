@@ -4,14 +4,14 @@ This document outlines the process of generating images using the `Leonardo` lib
 
 ## Overview
 
-The code snippet demonstrates how to use the `Leonardo` class from the `lib.leonardo` module to generate an image based on a textual prompt. The example generates an image of a fantastical scene inside an ancient, otherworldly library.
+The code snippet demonstrates how to use the `Leonardo` class from the `leonardoWrapper` module to generate an image based on a textual prompt. The example generates an image of a fantastical scene inside an ancient, otherworldly library.
 
 ## Steps
 
 1. **Initialization**: The `Leonardo` class is initialized with a username and password.
 
     ```python
-    from leonardo_wrapper import Leonardo
+    from leonardoWrapper import Leonardo
 
     leonardo = Leonardo(username="your_username", password="your_password")
     ```

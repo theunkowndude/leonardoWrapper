@@ -8,7 +8,7 @@ setup(
     description="A wrapper for the leonardo.ai image generation",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/theunkowndude/leonardo-wrapper",
+    url="https://github.com/theunkowndude/leonardoWrapper",
     packages=find_packages(),
     install_requires=[
         "requests",
