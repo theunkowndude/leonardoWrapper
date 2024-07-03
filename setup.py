@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="leonardoWrapper",
-    version="1.0.0",
+    version="1.1.0",
     author="the_unkown_dude, anditv21",
     author_email="zaima_max@proton.me",
     description="A wrapper for the leonardo.ai image generation",
