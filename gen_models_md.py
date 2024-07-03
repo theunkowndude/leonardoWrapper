@@ -1,6 +1,6 @@
 from leonardoWrapper import Leonardo
 
-leonardo = Leonardo(username="1TxGjOAy0gkt@easymails.cc", password="eoacsbVssMxP62!")
+leonardo = Leonardo(username="", password="")
 
 keys_to_remove = ["instancePrompt", "modelHeight", "modelWidth", "createdAt"]
 
