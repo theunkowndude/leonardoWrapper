@@ -9,8 +9,13 @@ from leonardoWrapper.util.userAgents import get_random_user_agent
 sys.dont_write_bytecode = True
 
 class RequestsHandler:
-    def __init__(self):
+    def __init__(self, proxy: str = None) -> None:
         self.requests_session: requests.Session = requests.Session()
+        if proxy is not None:
+            self.requests_session.proxies = {
+                "http": f"http://{proxy}",
+                "https": f"http://{proxy}"
+            }
         self.requests_session.headers.update(
             {
                 "User-Agent": get_random_user_agent()

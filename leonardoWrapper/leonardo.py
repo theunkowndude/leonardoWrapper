@@ -9,12 +9,12 @@ from leonardoWrapper.util.api import RequestsHandler
 sys.dont_write_bytecode = True
 
 class Leonardo:
-    def __init__(self, username: str, password: str) -> None:
-        self._requests_handler = RequestsHandler()
+    def __init__(self, username: str, password: str, proxy: str = None) -> None:
+        self._requests_handler = RequestsHandler(proxy=proxy)
         self.user = User(username=username, password=password, requests_handler=self._requests_handler)
 
 
-    def create_generate_image(self, prompt: str, model_id: str, negative_prompt: str = "", nswf: bool = False, image_size: int = 7, sd_version: str = None, amount_of_images: int = 4, width: int = 1368, height: int = 768, num_inference_steps: int = 10, guidance_scale: int = 7, scheduler: str = None, tiling: bool = False, public: bool = False, leonardo_magic: bool = False, enhance_prompt: bool = True, contrast: float = 3.5, preset_style: str = None, pose_to_image: bool = False, pose_to_image_type: str = "POSE", weighting: float = 0.75, high_contrast: bool = False, transparency: Literal["enabled", "disabled"] = "disabled", photo_real: bool = False) -> str:
+    def create_generate_image(self, prompt: str, model_id: str, negative_prompt: str = "", nswf: bool = False, image_size: int = 7, sd_version: str = None, amount_of_images: int = 4, width: int = 1368, height: int = 768, num_inference_steps: int = 10, guidance_scale: int = 7, scheduler: str = None, tiling: bool = False, public: bool = False, leonardo_magic: bool = False, enhance_prompt: bool = True, contrast: float = 3.5, preset_style: str = None, pose_to_image: bool = False, pose_to_image_type: str = "POSE", weighting: float = 0.75, high_contrast: bool = False, transparency: Literal["enabled", "disabled"] = "disabled", photo_real: bool = False, seed: int = None) -> str:
         """
         Create a task to generate an image based on the provided prompt.
         Parameters:
@@ -40,6 +40,7 @@ class Leonardo:
             - high_contrast: Whether to use high contrast for generating the image.
             - transparency: Whether to use transparency for generating the image.
             - photo_real: Whether to use photo real for generating the image.
+            - seed: The seed to be used for generating the image.
         """
 
         if guidance_scale < 1 or guidance_scale > 20:
@@ -79,7 +80,8 @@ class Leonardo:
                         "transparency": transparency,
                         "styleUUID": "111dc692-d470-4eec-b791-3475abac4c46",
                         "enhancePrompt": enhance_prompt,
-                        "collectionIds": []
+                        "collectionIds": [],
+                        "seed": seed
                     }
                 },
                 "query": "mutation CreateSDGenerationJob($arg1: SDGenerationInput!) { sdGenerationJob(arg1: $arg1) { generationId __typename } }"
@@ -160,7 +162,7 @@ class Leonardo:
                         "offset": 0,
                         "limit": 10
                     },
-                "query": "query GetAIGenerationFeed($where: generations_bool_exp = {}, $userId: uuid, $limit: Int, $offset: Int = 0) { generations( limit: $limit offset: $offset order_by: [{createdAt: desc}] where: $where) { modelId scheduler coreModel sdVersion prompt negativePrompt id status quantity createdAt public nsfw custom_model { id userId name modelHeight modelWidth } generated_images(order_by: [{url: desc}]) { id url nsfw } } }"
+                "query": "query GetAIGenerationFeed($where: generations_bool_exp = {}, $userId: uuid, $limit: Int, $offset: Int = 0) { generations( limit: $limit offset: $offset order_by: [{createdAt: desc}] where: $where) { modelId scheduler coreModel sdVersion prompt negativePrompt id status quantity createdAt public seed nsfw custom_model { id userId name modelHeight modelWidth } generated_images(order_by: [{url: desc}]) { id url nsfw } } }"
             }
         )
 
@@ -180,7 +182,7 @@ class Leonardo:
                 "createdAt": get_solution["json"]["data"]["generations"][0]["createdAt"],
                 "public": get_solution["json"]["data"]["generations"][0]["public"],
                 "nsfw": get_solution["json"]["data"]["generations"][0]["nsfw"],
-
+                "seed": get_solution["json"]["data"]["generations"][0]["seed"],
                 "generated_images": [
                     {
                         "id": image["id"],
