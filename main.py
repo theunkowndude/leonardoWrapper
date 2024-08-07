@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import QThread, pyqtSignal
 from PyQt6.QtGui import QAction
-from leonardoWrapper.leonardo import Leonardo  # Đảm bảo rằng bạn đã import lớp Leonardo từ mã của bạn
+from leonardoWrapper.leonardo import Leonardo  
 
 
 class ImageGenerationThread(QThread):
@@ -207,6 +207,10 @@ class LeonardoApp(QWidget):
         self.sd_version_label.setText(self.models[model_name]['sd_version'])
 
     def generate_image(self):
+        if not self.image_save_path:
+            self.append_message(self.languages[f'{self.current_language}_select_directory_warning'], 'red')
+            return
+
         if not self.leonardo:
             if self.proxy:
                 self.leonardo = Leonardo(username=self.username, password=self.password, proxy=self.proxy)
@@ -236,8 +240,7 @@ class LeonardoApp(QWidget):
         self.result_output.clear()
         for image in result['generated_images']:
             self.result_output.append(image['url'])
-            if self.image_save_path:
-                self.download_image(image['url'])
+            self.download_image(image['url'])
         self.append_message(self.languages[f'{self.current_language}_completed'], 'green')
 
     def display_error(self, error):
@@ -251,17 +254,29 @@ class LeonardoApp(QWidget):
 
     def select_directory(self):
         self.image_save_path = QFileDialog.getExistingDirectory(self, self.languages[f'{self.current_language}_select_directory'])
+        if self.image_save_path:
+            self.append_message(f"{self.languages[f'{self.current_language}_directory_selected']}: {self.image_save_path}", 'blue')
 
     def download_image(self, url):
         import os
         import requests
 
-        response = requests.get(url)
-        if response.status_code == 200:
-            os.makedirs(self.image_save_path, exist_ok=True)
-            image_path = os.path.join(self.image_save_path, os.path.basename(url))
-            with open(image_path, 'wb') as file:
-                file.write(response.content)
+        if not self.image_save_path:
+            self.image_save_path = os.getcwd()
+            self.append_message(f"No directory selected. Using current directory: {self.image_save_path}", 'blue')
+
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                os.makedirs(self.image_save_path, exist_ok=True)
+                image_path = os.path.join(self.image_save_path, os.path.basename(url))
+                with open(image_path, 'wb') as file:
+                    file.write(response.content)
+                self.append_message(f"Image successfully saved to: {image_path}", 'green')
+            else:
+                self.append_message(f"Failed to download image. Status code: {response.status_code}", 'red')
+        except Exception as e:
+            self.append_message(f"An error occurred while downloading the image: {str(e)}", 'red')
 
     def append_message(self, message, color):
         self.result_output.append(f"<span style='color:{color};'>{message}</span>")
