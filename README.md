@@ -5,6 +5,14 @@ This document outlines the process of generating images using the `Leonardo` lib
 ## Overview
 
 The code snippet demonstrates how to use the `Leonardo` class from the `leonardoWrapper` module to generate an image based on a textual prompt. The example generates an image of a fantastical scene inside an ancient, otherworldly library.
+## GUI
+
+
+Leonardo AI wrapper app, which has been updated to add a Gui interface
+
+![image](https://github.com/user-attachments/assets/32231bf4-6038-4802-a230-98523ee45eec)
+
+
 
 ## Steps
 
