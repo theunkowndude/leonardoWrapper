@@ -1,7 +1,7 @@
 import sys
 import configparser
 from PyQt6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
+    QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit,
     QComboBox, QPushButton, QCheckBox, QTextEdit, QMessageBox, QMenuBar, QFileDialog
 )
 from PyQt6.QtCore import QThread, pyqtSignal
@@ -138,7 +138,6 @@ class LeonardoApp(QWidget):
         self.amount_of_images_input.setText("1")
         layout.addWidget(QLabel("Amount of Images🎑"))
         layout.addWidget(self.amount_of_images_input)
-        
 
         self.seed_input = QLineEdit(self)
         layout.addWidget(QLabel("Seed"))
@@ -239,14 +238,16 @@ class LeonardoApp(QWidget):
             self.result_output.append(image['url'])
             if self.image_save_path:
                 self.download_image(image['url'])
-        self.status_label.setText(self.languages[f'{self.current_language}_completed'])
+        self.append_message(self.languages[f'{self.current_language}_completed'], 'green')
 
     def display_error(self, error):
-        QMessageBox.critical(self, self.languages[f'{self.current_language}_error_message'], error)
-        self.status_label.setText(self.languages[f'{self.current_language}_error'])
+        self.append_message(error, 'red')
+        self.append_message(self.languages[f'{self.current_language}_error'], 'red')
 
     def update_status(self, status_key):
-        self.status_label.setText(self.languages[f'{self.current_language}_{status_key}'])
+        status_message = self.languages[f'{self.current_language}_{status_key}']
+        color = 'blue' if status_key in ['starting', 'waiting'] else 'green'
+        self.append_message(status_message, color)
 
     def select_directory(self):
         self.image_save_path = QFileDialog.getExistingDirectory(self, self.languages[f'{self.current_language}_select_directory'])
@@ -261,6 +262,9 @@ class LeonardoApp(QWidget):
             image_path = os.path.join(self.image_save_path, os.path.basename(url))
             with open(image_path, 'wb') as file:
                 file.write(response.content)
+
+    def append_message(self, message, color):
+        self.result_output.append(f"<span style='color:{color};'>{message}</span>")
 
 
 if __name__ == '__main__':
